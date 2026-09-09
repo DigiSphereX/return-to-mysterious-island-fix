@@ -80,6 +80,12 @@ powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -SkipInstall
 - **Corrupted config.ini**: restore the backup `config.ini.bak` (or delete your changes) and run the fixer again.
 - **Sound is broken / missing**: set the default audio device in the game options, or install OpenAL from `_Redist\oalinst.exe` if your copy ships it.
 
+## Security & Antivirus Notes
+
+- The download is pinned to a fixed release (`v7.1.0.0`) over **HTTPS** from the official repository, and the zip is **verified against a SHA256 hash** before it is extracted. If the checksum does not match, the script aborts.
+- `cnc-ddraw`'s `ddraw.dll` is a *graphics wrapper* that hooks legacy DirectDraw calls. Some antivirus engines flag it heuristically as "suspicious" simply because it intercepts graphics APIs — this is a known false-positive of the tool, **not** a threat. If your AV quarantines it, allow-list the game folder.
+- The script downloads nothing else and sends no data anywhere. You can review the entire source here.
+
 ## Repository Files
 
 | File | Purpose |

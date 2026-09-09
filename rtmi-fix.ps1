@@ -11,6 +11,7 @@ Set-Location $gameDir
 
 $cncVersion = 'v7.1.0.0'
 $cncUrl     = "https://github.com/FunkyFr3sh/cnc-ddraw/releases/download/$cncVersion/cnc-ddraw.zip"
+$cncSha256  = '0B13AB89A64C9918189B1DADD449EF6ED3CB3B7B19CABD96D8ADBD95505BB908'
 
 Write-Host ""
 Write-Host "=============================================================="
@@ -46,6 +47,11 @@ if ($needInstall) {
             if (-not (Test-Path $zip) -or (Get-Item $zip).Length -lt 1000000) {
                 throw "Downloaded file is missing or too small. Check your internet connection."
             }
+            $downloadedHash = (Get-FileHash -Path $zip -Algorithm SHA256).Hash
+            if ($downloadedHash -ne $cncSha256) {
+                throw "Integrity check failed for cnc-ddraw.zip (expected SHA256 $($cncSha256.Substring(0,12))..., got $($downloadedHash.Substring(0,12))...). The file may be corrupted or tampered with - try again later."
+            }
+            Write-Host "      Integrity verified (SHA256 match)."
             if (Test-Path $out) { Remove-Item $out -Recurse -Force }
             Expand-Archive -Path $zip -DestinationPath $out -Force
 
