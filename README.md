@@ -1,14 +1,14 @@
 # Return to Mysterious Island – Windows 10/11 Crash Fix & Launcher
 
-> Arabic/English. حل جذري يُصلح انغلاق اللعبة فجأة وتجمّدها ومشكلة الماوس على ويندوز 10/11.
+One-click fix & launcher that solves the game **crashing on startup**, **hanging**, and **mouse not working** on modern Windows 10 / 11.
 
 ![Status](https://img.shields.io/badge/status-working-green)
 ![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-## المشكلة / The Problem
+## The Problem
 
-لعبة **Return to Mysterious Island** (2004، محرك Kheops Staff) كانت تخرج/تُغلق من تلقاء نفسها بعد ثوانٍ من الفتح على ويندوز 10/11 الحديث، مع أخطاء في سجل الأحداث مثل:
+**Return to Mysterious Island** (2004, Kheops Studio engine) randomly **closes by itself a few seconds after launching** on modern Windows 10 / 11, and logs errors like:
 
 ```
 Faulting application name: Game.exe, version: 1.0.3.2
@@ -16,93 +16,93 @@ Faulting module name:    Game.exe
 Exception code:          0xc0000005   (Access Violation)
 ```
 
-وفي بعض الأجهزة كانت النافذة تظهر لكن اللعبة **لا تستجيب** (`Application Hang`)، أو كان **الماوس لا يتحرك** داخلها.
+On some machines the window appears but the game **freezes / does not respond** (`Application Hang`), or the **mouse cursor is stuck** and cannot move inside the game.
 
-### السبب الجذري / Root Cause
+### Root Cause
 
-اللعبة تعتمد على **DirectDraw** القديم (حتى Microsoft أوقفته رسمياً لاحقاً). وضع **ملء الشاشة الحصري** (Exclusive Fullscreen) لم يعد مدعوماً بشكل سليم في ويندوز 10/11:
+The game relies on the legacy **DirectDraw** API (deprecated by Microsoft years ago), and its **exclusive fullscreen mode** is no longer handled correctly by Windows 10 / 11:
 
-| الوضع | النتيجة بدون إصلاح |
+| Mode | Result without this fix |
 |---|---|
-| `bFullScreen=1` (ملء الشاشة) | انهيار بـ `0xc0000005` خلال ثوانٍ |
-| `bFullScreen=0` (نافذة) | تجمّد / تعليق (App Hang) أو نحافة |
-| `bCenterMouse=1` | الماوس محسور داخل النافذة |
+| `bFullScreen=1` (fullscreen) | Crash with `0xc0000005` within seconds |
+| `bFullScreen=0` (windowed) | Freezes / hangs or broken rendering |
+| `bCenterMouse=1` | Mouse cursor locked / cannot move |
 
-الحل: **غلاف DirectDraw حديث** (`cnc-ddraw`) يعترض نداءات DirectDraw ويعرضها عبر Direct3D/OpenGL/Vulkan بشكل متوافق مع ويندوز الحديث.
+The fix: a modern **DirectDraw wrapper** (`cnc-ddraw`) that intercepts all DirectDraw calls and presents the frames through Direct3D / OpenGL / Vulkan in a way that modern Windows handles properly.
 
 ---
 
-## الحل / The Fix
+## The Fix
 
-هذا السكربت يقوم بـ **3 خطوات تلقائية**:
+This script performs **3 automatic steps**:
 
-1. **تحميل وتثبيت `cnc-ddraw`** تلقائياً داخل مجلد اللعبة (إن لم يكن موجوداً) → يوقف الانهيار ويصلح ملء الشاشة.
-2. **تعديل `config.ini`** تلقائياً:
-   - `bFullScreen=1` (الغلاف يتحكم بالعرض بشكل آمن)
-   - `bCenterMouse = 0` (لتتحرك بمؤشر الماوس بحرية)
-   - `PATH=...datas` (مسار البيانات الصحيح لمجلد اللعبة)
-   - **يُنشئ نسخة احتياطية** `config.ini.bak`
-3. **تشغيل اللعبة** تلقائياً (`RtMI.exe` أو `Game.exe`) من مجلد العمل الصحيح.
+1. **Downloads and installs `cnc-ddraw`** into the game folder automatically (only if missing) → stops the crash and makes fullscreen work.
+2. **Patches `config.ini`** automatically:
+   - `bFullScreen=1` (the wrapper handles presentation safely)
+   - `bCenterMouse = 0` (mouse moves freely)
+   - `PATH=...datas` (points the data path to the correct game folder)
+   - **Creates a backup** as `config.ini.bak`
+3. **Launches the game** automatically (`RtMI.exe` or `Game.exe`) from the correct working directory.
 
-## المتطلبات / Requirements
+## Requirements
 
-- Windows 10 أو Windows 11 (32/64-bit)
-- PowerShell 5.1 أو أحدث (مدمج مع ويندوز)
-- اتصال إنترنت مرة واحدة فقط (لتحميل `cnc-ddraw` إن لم يكن مثبتاً)
-- نسخة اللعبة كاملة (GOG أو أي نسخة) في مجلد واحد
+- Windows 10 or Windows 11 (32/64-bit)
+- PowerShell 5.1 or newer (built into Windows)
+- Internet connection once (to download `cnc-ddraw` if not present)
+- A complete copy of the game (any version) in a single folder
 
-## طريقة الاستخدام / How to Use
+## How to Use
 
-1. نزّل الملفين التاليين وضعها داخل مجلد اللعبة (بجانب `Game.exe`):
+1. Download these two files and place them in the game folder (next to `Game.exe`):
    - `RTMI_Fix_and_Play.bat`
    - `rtmi-fix.ps1`
-2. **انقر نقراً مزدوجاً** على `RTMI_Fix_and_Play.bat`.
-3. انتظر حتى يجهّز العناوين الثلاثة ثم ستبدأ اللعبة.
+2. **Double-click** `RTMI_Fix_and_Play.bat`.
+3. Wait for the three steps to finish — the game will start automatically.
 
-يمكنك أيضاً تشغيل الـ PowerShell مباشرة:
+You can also run the PowerShell script directly:
 
 ```powershell
-# تشغيل عادي (ينزّل cnc-ddraw إن لزم ثم يعلّب الإعدادات ويفتح اللعبة)
+# Normal run (downloads cnc-ddraw if needed, patches settings, launches the game)
 powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1
 
-# خيارات إضافية:
-#  -Force          أعد تحميل وتثبيت cnc-ddraw من جديد حتى لو كان موجوداً
-#  -SkipInstall    لا تنزّل أي شيء، فقط صحّح الإعدادات وشغّل اللعبة
+# Extra options:
+#  -Force          Re-download and re-install cnc-ddraw even if ddraw.dll is present
+#  -SkipInstall    Do not download anything, only patch settings and launch
 powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -Force
 powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -SkipInstall
 ```
 
-## ماذا لو بقيت مشكلة؟ / Troubleshooting
+## Troubleshooting
 
-- **ملء الشاشة ليس مثالياً / أبعاد غريبة**: افتح `cnc-ddraw config.exe` داخل مجلد اللعبة واضبط *Presentation* (Scaling / Aspect Ratio / Windowed-Borderless).
-- **الماوس عالق بعد فتح اللعبة**: اضغط `Ctrl+Tab` (قفل مؤشر الغلاف) أو اضبط *Mouse* في cofig.exe.
-- **اللعبة تختفي عند التنقل Alt+Tab**: في `cnc-ddraw config.exe` جرّب خيار `Nonexclusive` أو فعّل `Windowed Borderless`.
-- **ملف config.ini تالف**: احذف `config.ini.bak` وامسح التعديلات، أو انسخ `config.ini.bak` فوقه ثم أعد التشغيل.
-- **اللعبة مقطوعة الصوت**: من إعدادات اللعبة اختر جهاز الصوت default، أو ثبّت OpenAL من `_Redist\oalinst.exe`.
+- **Fullscreen looks wrong / bad aspect ratio**: run `cnc-ddraw config.exe` in the game folder and adjust *Presentation* (Scaling / Aspect Ratio / Windowed-Borderless).
+- **Cursor stuck after entering the game**: press `Ctrl+Tab` (wrapper cursor lock) or adjust the *Mouse* options in `cnc-ddraw config.exe`.
+- **Game disappears when Alt+Tab**: in `cnc-ddraw config.exe` try toggling `Nonexclusive` or enabling *Windowed Borderless*.
+- **Corrupted config.ini**: restore the backup `config.ini.bak` (or delete your changes) and run the fixer again.
+- **Sound is broken / missing**: set the default audio device in the game options, or install OpenAL from `_Redist\oalinst.exe` if your copy ships it.
 
-## الملفات في هذا المستودع / Repository Files
+## Repository Files
 
-| الملف | الغرض |
+| File | Purpose |
 |---|---|
-| `RTMI_Fix_and_Play.bat` | الواجهة التنفيذية (نقر مزدوج) |
-| `rtmi-fix.ps1` | منطق الإصلاح والتشغيل |
-| `README.md` | الوثائق (هذا الملف) |
+| `RTMI_Fix_and_Play.bat` | The executable entry point (double-click) |
+| `rtmi-fix.ps1` | The fix & launch logic |
+| `README.md` | Documentation (this file) |
 
-ملاحظة: هذا المستودع **لا يحتوي ملفات اللعبة نفسها** — النسخة كاملة من لعبتك الخاصة. نبني فقط أداة إصلاح.
+Note: this repository does **not** contain the game files themselves — bring your own copy. This project only ships the fix tool.
 
-## كيف يعمل cnc-ddraw من الداخل؟ / How It Works
+## How It Works Under the Hood
 
-1. لعبة 2004 تستدعي `LoadLibrary("ddraw.dll")`.
-2. ويندوز يبحث عن `ddraw.dll` في **مجلد التطبيق أولاً** → يجد نسخة `cnc-ddraw`.
-3. الغلاف يعترض كل نداءات DirectDraw (سطوح، عرض، مؤشر...).
-4. يعرض الإطارات عبر **Direct3D 9 / OpenGL** متوافقة مع ويندوز الحديث، مع دعم ملء الشاشة الآمن والماوس.
+1. The 2004 game calls `LoadLibrary("ddraw.dll")`.
+2. Windows looks for `ddraw.dll` in **the application folder first** → finds the `cnc-ddraw` copy.
+3. The wrapper intercepts every DirectDraw call (surfaces, presentation, cursor, ...).
+4. Frames are presented through **Direct3D 9 / OpenGL**, compatible with modern Windows, with safe fullscreen and mouse handling.
 
-`cnc-ddraw` هو مشروع مفتوح المصدر: [FunkyFr3sh/cnc-ddraw](https://github.com/FunkyFr3sh/cnc-ddraw)
+`cnc-ddraw` is an open-source project: [FunkyFr3sh/cnc-ddraw](https://github.com/FunkyFr3sh/cnc-ddraw)
 
-## الترخيص / License
+## License
 
-هذا السكربت مرخّص بـ [MIT](LICENSE). أداة `cnc-ddraw` لها رخصة مستقلة خاصة بها.
+This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool has its own separate license.
 
 ---
 
-*اكتُشفت المشكلة وحُلّت على Windows 11 25H2 مع نسخة GOG من اللعبة. لا تنسَ أن اللعبة نفسها مرخّصة لك وتحتاج نسخة أصلية/متوافقة للاستخدام الخاص.*
+*Problem discovered and fixed on Windows 11 25H2 with the GOG release of the game. Remember that the game itself is licensed to you and you need a legitimate copy.*
