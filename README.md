@@ -112,3 +112,12 @@ This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool h
 ---
 
 *Problem discovered and fixed on Windows 11 25H2 with the GOG release of the game. Remember that the game itself is licensed to you and you need a legitimate copy.*
+
+---
+
+## ☕ Support this project
+
+Free and open source (MIT). If this fix saved you time or money, consider a small thank-you:
+
+- **GitHub Sponsors** -> https://github.com/sponsors/DigiSphereX
+- **PayPal** -> https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2
