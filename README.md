@@ -105,6 +105,14 @@ Note: this repository does **not** contain the game files themselves — bring y
 
 `cnc-ddraw` is an open-source project: [FunkyFr3sh/cnc-ddraw](https://github.com/FunkyFr3sh/cnc-ddraw)
 
+## Disclaimer / Backup advice
+
+Use this fix at your own risk. Before applying it: read the scripts (everything here
+is plain, readable source), **back up** the game folder / `ddraw.dll` you replace,
+and create a system restore point. A fix that works on most machines can behave
+unexpectedly on a specific setup. The author is not responsible for any
+unintentional damage or data loss.
+
 ## License
 
 This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool has its own separate license.
