@@ -5,6 +5,7 @@ One-click fix & launcher that solves the game **crashing on startup**, **hanging
 ![Status](https://img.shields.io/badge/status-working-green)
 ![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-blue)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-0070BA)](https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2)
 
 ## The Problem
 
@@ -125,7 +126,7 @@ This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool h
 
 ## ☕ Support this project
 
-Free and open source (MIT). If this fix saved you time or money, consider a small thank-you:
+Free and open source (MIT). If this project saved you time or money, consider a small thank-you:
 
 - **GitHub Sponsors** -> https://github.com/sponsors/DigiSphereX
 - **PayPal** -> https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2
