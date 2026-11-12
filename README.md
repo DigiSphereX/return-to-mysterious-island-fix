@@ -1,11 +1,13 @@
 # Return to Mysterious Island – Windows 10/11 Crash Fix & Launcher
 
-One-click fix & launcher that solves the game **crashing on startup**, **hanging**, and **mouse not working** on modern Windows 10 / 11.
+[![License: MIT](https://img.shields.io/badge/License-MIT-informational.svg?style=for-the-badge)](LICENSE)
+[![Release](https://img.shields.io/badge/Release-v1.0.0-brightgreen.svg?style=for-the-badge)](https://github.com/DigiSphereX/return-to-mysterious-island-fix/releases/latest)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-0070BA.svg?style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2)
 
 ![Status](https://img.shields.io/badge/status-working-green)
 ![Platform](https://img.shields.io/badge/Windows-10%20%2F%2011-blue)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
-[![Donate](https://img.shields.io/badge/Donate-PayPal-0070BA)](https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2)
+
+One-click fix & launcher that solves the game **crashing on startup**, **hanging**, and **mouse not working** on modern Windows 10 / 11.
 
 ## The Problem
 
@@ -45,16 +47,23 @@ This script performs **3 automatic steps**:
    - **Creates a backup** as `config.ini.bak`
 3. **Launches the game** automatically (`RtMI.exe` or `Game.exe`) from the correct working directory.
 
-## Requirements
+## Download
 
-- Windows 10 or Windows 11 (32/64-bit)
-- PowerShell 5.1 or newer (built into Windows)
-- Internet connection once (to download `cnc-ddraw` if not present)
-- A complete copy of the game (any version) in a single folder
+Get the latest release from:
 
-## How to Use
+**https://github.com/DigiSphereX/return-to-mysterious-island-fix/releases/latest**
 
-1. Download these two files and place them in the game folder (next to `Game.exe`):
+Download `return-to-mysterious-island-fix.zip`, extract it, and copy these two files into
+your game folder (next to `Game.exe`):
+
+- `RTMI_Fix_and_Play.bat`
+- `rtmi-fix.ps1`
+
+You can also download the two files directly from this repository.
+
+## Usage
+
+1. Place the two files in the game folder (next to `Game.exe`):
    - `RTMI_Fix_and_Play.bat`
    - `rtmi-fix.ps1`
 2. **Double-click** `RTMI_Fix_and_Play.bat`.
@@ -72,6 +81,15 @@ powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1
 powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -Force
 powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -SkipInstall
 ```
+
+## How it works
+
+1. The 2004 game calls `LoadLibrary("ddraw.dll")`.
+2. Windows looks for `ddraw.dll` in **the application folder first** → finds the `cnc-ddraw` copy.
+3. The wrapper intercepts every DirectDraw call (surfaces, presentation, cursor, ...).
+4. Frames are presented through **Direct3D 9 / OpenGL**, compatible with modern Windows, with safe fullscreen and mouse handling.
+
+`cnc-ddraw` is an open-source project: [FunkyFr3sh/cnc-ddraw](https://github.com/FunkyFr3sh/cnc-ddraw)
 
 ## Troubleshooting
 
@@ -97,14 +115,18 @@ powershell -ExecutionPolicy Bypass -File .\rtmi-fix.ps1 -SkipInstall
 
 Note: this repository does **not** contain the game files themselves — bring your own copy. This project only ships the fix tool.
 
-## How It Works Under the Hood
+## Build from source
 
-1. The 2004 game calls `LoadLibrary("ddraw.dll")`.
-2. Windows looks for `ddraw.dll` in **the application folder first** → finds the `cnc-ddraw` copy.
-3. The wrapper intercepts every DirectDraw call (surfaces, presentation, cursor, ...).
-4. Frames are presented through **Direct3D 9 / OpenGL**, compatible with modern Windows, with safe fullscreen and mouse handling.
+Nothing to build — the project is a plain PowerShell script plus a batch launcher, shipped
+as readable source. Clone or download the repository, review the two files in any text
+editor, and run them as described under [Usage](#usage).
 
-`cnc-ddraw` is an open-source project: [FunkyFr3sh/cnc-ddraw](https://github.com/FunkyFr3sh/cnc-ddraw)
+## Requirements
+
+- Windows 10 or Windows 11 (32/64-bit)
+- PowerShell 5.1 or newer (built into Windows)
+- Internet connection once (to download `cnc-ddraw` if not present)
+- A complete copy of the game (any version) in a single folder
 
 ## Disclaimer / Backup advice
 
@@ -114,13 +136,12 @@ and create a system restore point. A fix that works on most machines can behave
 unexpectedly on a specific setup. The author is not responsible for any
 unintentional damage or data loss.
 
+*Problem discovered and fixed on Windows 11 25H2 with the GOG release of the game.
+Remember that the game itself is licensed to you and you need a legitimate copy.*
+
 ## License
 
-This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool has its own separate license.
-
----
-
-*Problem discovered and fixed on Windows 11 25H2 with the GOG release of the game. Remember that the game itself is licensed to you and you need a legitimate copy.*
+MIT — see [LICENSE](LICENSE). The `cnc-ddraw` tool has its own separate license.
 
 ---
 
@@ -128,5 +149,5 @@ This script is licensed under the [MIT License](LICENSE). The `cnc-ddraw` tool h
 
 Free and open source (MIT). If this project saved you time or money, consider a small thank-you:
 
-- **GitHub Sponsors** -> https://github.com/sponsors/DigiSphereX
-- **PayPal** -> https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2
+- [GitHub Sponsors](https://github.com/sponsors/DigiSphereX)
+- [PayPal](https://www.paypal.com/donate/?hosted_button_id=CFANQH892RPH2)
